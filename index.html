@@ -74,9 +74,9 @@
                 finFactureAnniversaire.setDate(factureDebutJour - 1); // la veille du jour de début du mois suivant
             }
 
-            // Calcul de la date de cession (10 jours avant le début de la facture contenant l'anniversaire)
+            // Calcul de la date de cession (15 jours avant le début de la facture contenant l'anniversaire)
             let dateCession = new Date(debutFactureAnniversaire);
-            dateCession.setDate(dateCession.getDate() - 10);
+            dateCession.setDate(dateCession.getDate() - 15);  // Modifié à 15 jours
 
             // Affichage du résultat
             document.getElementById('result').textContent = `Vous devez lancer la cession avant le : ${dateCession.toLocaleDateString('fr-FR')}`;
