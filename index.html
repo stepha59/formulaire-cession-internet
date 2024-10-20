@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul de la Date de Cession Internet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input, button {
+            display: block;
+            margin: 10px 0;
+        }
+        input {
+            padding: 5px;
+            width: 250px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Formulaire de calcul pour la cession de la ligne internet</h2>
+
+<form id="cessionForm">
+    <label for="souscriptionDate">Date de souscription :</label>
+    <input type="date" id="souscriptionDate" required>
+
+    <label for="factureDebut">Début de la période de facturation (jour) :</label>
+    <input type="number" id="factureDebut" min="1" max="31" required>
+
+    <button type="button" id="calculButton">Calculer la date de cession</button>
+</form>
+
+<p id="result"></p>
+
+<script>
+    window.onload = function() {
+        // Fonction pour calculer la date de cession
+        function calculerDateCession() {
+            // Récupération des valeurs de l'utilisateur
+            const souscriptionDate = new Date(document.getElementById('souscriptionDate').value);
+            const factureDebutJour = parseInt(document.getElementById('factureDebut').value);
+
+            // Anniversaire de la souscription (un an après la souscription)
+            const anniversaireSouscription = new Date(souscriptionDate);
+            anniversaireSouscription.setFullYear(anniversaireSouscription.getFullYear() + 1);
+
+            // Trouver la période de facturation qui inclut l'anniversaire de souscription
+            let debutFactureAnniversaire = new Date(anniversaireSouscription);
+            if (anniversaireSouscription.getDate() < factureDebutJour) {
+                // Si l'anniversaire est avant le début de la période de facturation, on recule d'un mois
+                debutFactureAnniversaire.setMonth(debutFactureAnniversaire.getMonth() - 1);
+            }
+            debutFactureAnniversaire.setDate(factureDebutJour);
+
+            // Si la facturation commence le 1er, on fixe la fin de la période au dernier jour du mois
+            let finFactureAnniversaire = new Date(debutFactureAnniversaire);
+            if (factureDebutJour === 1) {
+                finFactureAnniversaire.setMonth(finFactureAnniversaire.getMonth() + 1);
+                finFactureAnniversaire.setDate(0); // dernier jour du mois précédent
+            } else {
+                finFactureAnniversaire.setDate(factureDebutJour - 1); // la veille du jour de début du mois suivant
+            }
+
+            // Calcul de la date de cession (15 jours avant le début de la facture contenant l'anniversaire)
+            let dateCession = new Date(debutFactureAnniversaire);
+            dateCession.setDate(dateCession.getDate() - 15);
+
+            // Affichage du résultat
+            document.getElementById('result').textContent = `Vous devez lancer la cession avant le : ${dateCession.toLocaleDateString('fr-FR')}`;
+        }
+
+        // Ajouter un événement pour détecter le clic sur le bouton
+        document.getElementById('calculButton').addEventListener('click', calculerDateCession);
+    };
+</script>
+
+</body>
+</html>
